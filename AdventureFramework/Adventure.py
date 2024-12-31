@@ -3,7 +3,7 @@ class Adventure:
     use a simple list to create a basica container for events inside the adventure instance. Then have methods in the
     adventure class like add_event, add_character, etc"""
     #Constructor
-    def __init__(self, name, attributes = [], current_event = '', previous_event = '', journey_complete = False):
+    def __init__(self, name, attributes = [], current_event = None, previous_event = None, journey_complete = False):
         self.current_event = current_event
         self.name = name
         self.attributes = attributes

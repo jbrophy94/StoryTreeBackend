@@ -1,6 +1,6 @@
 class Event:
     #An event will hold the story, choices, potential outcomes, and associated functionality
-    def __init__(self, name = '',  story_text = '', branch_groups = []):
+    def __init__(self, name = None,  story_text = None, branch_groups = []):
         self.name = name
         self.story_text = story_text
         self.branch_groups = branch_groups

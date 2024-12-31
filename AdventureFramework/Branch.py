@@ -1,5 +1,5 @@
 class Branch:
-    def __init__(self, outcome_text = "", next_event = ''):
+    def __init__(self, outcome_text = None, next_event = None):
         self.outcome_text = outcome_text
         self.next_event = next_event
 
