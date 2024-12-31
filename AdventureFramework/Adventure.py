@@ -1,15 +1,23 @@
+from .Character import Character
+
 class Adventure:
-    """Ultimately, we will 'attach' other class instances to this--adventure will have a spot for character, events, etc. Basically
+    """
+    Ultimately, we will 'attach' other class instances to this--adventure will have a spot for character, events, etc. Basically
     use a simple list to create a basica container for events inside the adventure instance. Then have methods in the
-    adventure class like add_event, add_character, etc"""
+    adventure class like add_event, add_character, etc
+
+    I've added an npcs dictionary and each npc will be implemented as a character so the user can easily use npc attributes in various checks. There will
+    be no additional functionaliy like npc choices, opinions, or sentiment. This is purely to make the modifiers passed more consistent.
+    """
     #Constructor
-    def __init__(self, name, attributes = [], current_event = None, previous_event = None, journey_complete = False):
+    def __init__(self, name, attributes = [], current_event = None, previous_event = None, journey_complete = False, main_character = None, npcs = None):
         self.current_event = current_event
         self.name = name
         self.attributes = attributes
         self.current_event = current_event
         self.previous_event = previous_event
         self.journey_complete = journey_complete
+        self.npcs = npcs
 
     #getters
     def get_name(self):
@@ -41,11 +49,13 @@ class Adventure:
     def set_previous_event(self, previous_event):
         self.previous_event = previous_event
 
-    #Attachment setters
-    #set_character 
-    """alternatively we could do set_player_character if we want to build more characters 
-    into the story directly as character objects, but for now lets implement this simply"""
-
-    #attach_event
-
+    def set_main_character(self, name):
+        self.main_character = Character(name, attribute_list = self.get_attributes())
     
+    def set_main_character_attribute(self, attribute, value):
+        if attribute in self.main_character.attribute_dict:
+            self.main_character.attribute_dict[attribute] = value
+        else:
+            raise ValueError(f"Attribute '{attribute}' does not exist for the main character.")
+
+        
