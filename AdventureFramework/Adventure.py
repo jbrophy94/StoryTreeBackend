@@ -58,4 +58,7 @@ class Adventure:
         else:
             raise ValueError(f"Attribute '{attribute}' does not exist for the main character.")
 
-        
+    """
+    May want to combine set_main_character_attribute and set_npc_attribute to be the same function with the character passed in. 
+    Will need to figure out how to refer to npcs by index or some other way since they won't be stored in variables, but in a list. 
+    """
