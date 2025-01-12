@@ -1,0 +1,66 @@
+General Implementation Notes:
+1.	We are going to rely heavily on chaining setters and getter to create events/branch_groups/branches—as opposed to passing all relevant arguments into an Adventure class level method, and propagating the arguments down to the branch level. The chosen method will allow for greater flexibility and more granular control of the story.
+a.	Current_event.= MyAdventure.Events[‘event’].get_branch_group(branch_groups[“branch_group1”]).get_branch(branches[‘branch1]).get_next_event()
+2.	Yet to be worked out—how to access the events—they will NOT have variable names that can be accessed, so they will need to be accessed via some form of indexing or reference (dictionary—where event names are strings and values are events?—still doesn’t need special order or anything like that). 
+a.	Probably need to think similarly for branches 
+3.	We have one way attachment so far. This means that a branch knows which event is next, but not which event came before it—this may be something to consider more heavily. 
+a.	This can be easily remedied—in the branch class method attach_event just pass the name of the current event as well as the next event. Then store the current_event in the prev_event property of the next event. 
+4.	To start, it only makes sense to have one branch group per event—if we had a layer of complexity, or subevents within events, (or iterative events as we have discussed in person, then the idea of having multiple would be valid—they would need to be implemented in a hierarchial format, where one came first, then one came second in a way that makes sense with the story. 
+a.	Iterative events would be something like a fight, where if the enemy is still alive, you are still fighting, etc. Instead of going to a whole new event, we could have the event loop with variations of the same event (hence, different branch groups). 
+5.	The user’s actions will serve as the main function here. 
+6.	As of 3:37pm on 1/12/25, we have yet to determine whether outcome functionality should be stored at the branch or branch_group_check level. This is a broader structural issue and will require attention. 
+a.	After discussing further, all functionality will be implemented at the branch level. The branch will house a dictionary of outcomes (so far we are thinking success and fail) and will have a bool expression as a property called success_condition—there is a lot we can do with this, but all functionality will need to be defined ahead of time and ultimately will show up as a list of choices that a user can implement for any given branch in any given event. 
+7.	In order to access the function_dict (implemented at adventure level) from the branch level, we may need to propagate downward. 
+a.	We could just make it a static property of the class itself, rather than a property of the instance, since each adventure will have access to the same callback functions anyway—so instead of my_adventure.func_dict you’d have Adventure.funct_dict, and then we could access Adventure.func_dict from the branch class. Not 100% sure on this.  
+8.	Funct_dict doesn’t need to exist—we can instead make a callback manager class that has all of the funcitons as methods and just tie those to front end buttons/selection options. So user checks decrement health, sets main character as the effected character, and sets the number to 5, backend calls callback_mgr.decrement_health(main_character, 5).
+
+Adventure Class
+
+•	properties
+o	main_character—mian_character class (subclass of character)
+o	npc_list—list of character instances
+o	current_event—instance of event class
+o	list_of_all_sevents—order does not matter, the point is not to be able to reference by index. 
+o	Dictionary of callback functions. 
+•	Methods
+o	set_current_event
+o	set_main_character(calls constructor for character instance)
+o	create_npc(creates character and stores in NPC list)
+o	create_event
+o	get_event()
+
+Event Class
+•	Properties
+o	prev_event
+o	branch_group(s)—see implementation notes #4—store inside a dictionary with name, even though most events will only have a single branch group.  
+•	methods
+o	create_branch_group(parent_event, branch_group_name)--creates group, stores in dictionary with name—for now dictionaries will hold a single branch group but this gives us flex for iterative events later. 
+o	get_branch_group()
+o	potentially grouped functionality
+	get player’s choice. 
+	Get all branches
+	Select branch
+Branch Group
+•	Properties
+o	Branches_dict
+o	Parent_event—probs not even necessary
+•	Methods
+o	get_branch(name)
+o	create_branch—(branch_name, parent_event, parent_branch_group)--creates and attaches branch
+
+Branch
+•	Properties
+o	parent_event
+o	parent_branch_group
+o	next_event_dicitonary{‘success’:e,’fail’:e2)—this can get far more complex, but we need to implement ahead of time since the user won’t be coding. This will require a deep dive. 
+o	outcome_text
+o	success Boolean expression (the potential things to check for will need to be predefined so that the user can choose from the interface).
+o	Success_callback_function
+o	Fail_callback_function
+•	Methods
+o	Set_outcome_text(text)
+o	Get_outcome_text()
+o	Set_next_event(event_name)
+o	Get_next_event(success_boolean)
+o	Set_event(‘event name’ (like fail or success), next event) 
+
